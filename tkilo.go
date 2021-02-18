@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"unicode/utf8"
@@ -35,25 +36,24 @@ func readFromStdin() {
 		buf = make([]byte, utf8.UTFMax)
 		fmt.Println("idx =", idx)
 		idx++
-		// use  晚上吃什么  //test error
+
 		for {
 			rs, acnt := utf8.DecodeRune(prevBuf)
-			// _, acnt := utf8.DecodeRune(prevBuf)
-			// if rs == utf8.RuneError || !strconv.IsPrint(rs) {
 			if rs == utf8.RuneError || rs == 0 {
 				break
 			}
 			cnt = acnt
 			fmt.Println("cnt =", cnt)
-			// curVal := prevBuf[:cnt]
 			prevBuf = prevBuf[cnt:][:]
-			// fmt.Printf("Resp:=%s \n", buf) // Use Ctrl - D to reach the end of file // Enter is anther right input char = " ""
-			fmt.Printf("Resp rune source :=%v \n", rs) //
+			// Use Ctrl - D to reach the end of file // Enter is anther right input char = " ""
 			fmt.Printf("Resp rune :=%v \n\n", string(rs))
-			// fmt.Printf("Resp rune :=%s \n", string(curVal))
+			if bytes.IndexByte(prevBuf, 'q') != -1 {
+				return
+			}
 		}
 
 	}
+	//  test with  晚上吃什么  //fixed
 	// test with "我是中国人,万里长城万里长" //fixed
 
 }
